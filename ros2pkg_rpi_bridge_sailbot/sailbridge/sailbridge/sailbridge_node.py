@@ -14,6 +14,7 @@ class SailbridgeNode(Node):
         self.actuation_count = 0
 
         # GPIO setup
+        GPIO.setwarnings(False) # Suppress warnings for GPIO allocation.
         GPIO.setmode(GPIO.BCM)
         self.rudder_pin = 14
         self.sail_pin = 15
@@ -44,7 +45,14 @@ class SailbridgeNode(Node):
 
     def angle_to_duty_cycle(self, angle):
         # Convert angle (0-180) to duty cycle (2-12)
-        return 2 + (angle / 180.0) * 10
+        cycle = 2 + (angle / 180.0) * 10
+        # limit from 0 to 100
+        if cycle >100:
+            return 100
+        elif cycle <0:
+            return 0
+        else:
+            return cycle
 
     def actuation_callback(self, msg: JointState):
         current_time = time()
@@ -55,9 +63,13 @@ class SailbridgeNode(Node):
             self.last_actuation_time = current_time
             self.actuation_count += 1
 
+
+            print(f'Actuation received: rudder_angle: {self.rudder_angle}, sail_angle: {self.sail_angle}')
             # Control servos
             rudder_duty_cycle = self.angle_to_duty_cycle(self.rudder_angle)
             sail_duty_cycle = self.angle_to_duty_cycle(self.sail_angle)
+            print(f'Rudder: {rudder_duty_cycle}, Sail: {sail_duty_cycle}')
+
             self.rudder_servo.ChangeDutyCycle(rudder_duty_cycle)
             self.sail_servo.ChangeDutyCycle(sail_duty_cycle)
 
