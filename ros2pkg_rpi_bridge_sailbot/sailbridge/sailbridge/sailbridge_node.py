@@ -53,7 +53,7 @@ class SailbridgeNode(Node):
             return 0
         else:
             return cycle
-
+        
     def actuation_callback(self, msg: JointState):
         current_time = time()
         if current_time - self.last_actuation_time >= 0.05:
@@ -63,11 +63,10 @@ class SailbridgeNode(Node):
             self.last_actuation_time = current_time
             self.actuation_count += 1
 
-
             print(f'Actuation received: rudder_angle: {self.rudder_angle}, sail_angle: {self.sail_angle}')
             # Control servos
-            rudder_duty_cycle = self.angle_to_duty_cycle(self.rudder_angle)
-            sail_duty_cycle = self.angle_to_duty_cycle(self.sail_angle)
+            rudder_duty_cycle = self.angle_to_duty_cycle(self.rudder_angle+90.0)
+            sail_duty_cycle = self.angle_to_duty_cycle(self.sail_angle*2.0)
             print(f'Rudder: {rudder_duty_cycle}, Sail: {sail_duty_cycle}')
 
             self.rudder_servo.ChangeDutyCycle(rudder_duty_cycle)
