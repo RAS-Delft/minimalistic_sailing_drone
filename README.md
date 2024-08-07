@@ -24,3 +24,15 @@ With optionally:
 ![image](https://github.com/RAS-Delft/minimalistic_sailing_drone/assets/5917472/3a437bd4-fc68-4519-ab79-1486947a6fba)
 
 
+
+
+## Control system setup
+- Raspberry pi 3 with ubuntu 24 server
+- Connect to wifi. Enable SSH
+- (optionally) Disable USB and HDMI for power saving
+- Install ROS2 Jammy
+- Install RPI GPIO libraries
+```shell
+sudo apt-get install python3-rpi.gpio
+```
+
